@@ -1,0 +1,129 @@
+----TD3 : Redirection et variables d'environnement ----
+Objectifs : 
+x Approfondir l’étude des arborescences de processus
+x ’introduire la notion de variables d’environnement
+x Nous étudierons aussi les différents types de redirections, ainsi que
+la substitution de commandes.
+Exercice 3: Du père au fils: 
+Question 1: Pour commencer, tracez le chronogramme correspondant à l’exécution du script pere.sh.
+Bash
+ |
+ |./pere.sh 
+ --------------|  122(pere): +
+               |
+               |./fils.sh
+               ----------|  123 : ++
+                         |  123 : ++++
+                         |  123 : ++++++++
+                         |  123 : ++++++++++
+                         |  123 : ++++++++++++
+                ..........
+               |
+               |  PID(pere): +
+               |
+  ..............
+  |
+  |
+  
+  Question 2 : 
+echo est une built-in elle ne s'exécute pas, donc en utilisant /bin/echo l'interpête bash affiche une erreur et ne crée pas nouveau processus 
+  Question 3: 
+  pour savoir si une commande est une built-in on utilise la commande which suivie par la commande
+  Question 4 :  
+  le problème est que echo est une built-in elle ne peut pas s'exécuter ni de crée un nouveau processus donc /bin/echo ne marche pas 
+  Question 5: 
+chaque processus a ces propres variables d'environment d'ou on peut pas modifier la variable chaine dans le script fils.
+on doit ajouter $chaine apres ./fils.sh comme argument
+Question 6: 
+x Afin de pouvoir transmettre implicitement une variable à un processus fils, les systèmes Unix introduisent le concept de variables d’environnement. Ainsi au moment de sa création, un fils hérite de son père toutes les valeurs de ces variables. Par convention, le nom de ces variables est en majuscule.
+Dans un script, on peut à tout moment :
+— Ajouter une variable déjà existante à son environnement : export ma_variable
+— Ajouter une nouvelle variable à son environnement : export ma_variable="valeur"
+— Retirer une variable de son environnement : unset ma_variable
+Utilisez les variables d’environnement pour proposer une nouvelle implémentation des scripts pere.sh et fils.sh. Est-ce que cela change l’affichage du père ?
+#! /bin/bash
+#fils.sh
+ 
+nb=4
+while [ $nb -gt 0 ] ; do
+export chaine="$chaine$chaine"
+echo "$$ : $chaine"
+nb=$((nb-1))
+done
+#! /bin/bash
+#pere.sh
+chaine="+"
+echo "$$ : $chaine"
+./fils.sh
+export chaine
+echo "$$ : $chaine"
+Question 7: 
+passer la variable d'environment du pére comme paramétre aprés ./fils.sh
+Question 8: 
+Exercice 2 : 
+Dans cet exercice, on veut lancer une succession de scripts, suivant le schéma suivant. Le script jonathan.sh va lancer le script pelican.sh, qui à son tour va lancer le script pelican.sh, et ainsi de suite ... cela pourrait durer pendant très longtemps, alors on se limitera à n d’instances de pelican.sh, où
+n sera un paramètre du script jonathan.sh.
+Question 1: 
+pour n = 3
+Bash
+ |
+ |./jonathan.sh
+ --------------| 
+               |
+               |./pelican.sh 
+               ----------|  
+                         |  
+                         |  
+                         |  
+                         |  ./pelican.sh
+                         ------------
+                                    |
+                                    |  
+                                    |
+                         ............           
+                        |
+                        |  
+                        |
+              ...........
+              |
+              |  
+              |
+...............
+|  
+|
+#!/bin/bash
+#jonathan.sh
+if [ ! $# -eq 1 ]; then
+echo "un seul argument"
+else
+./pelican.sh $1
+echo "les pelicans sont tous executer"
+#!/bin/bash
+#pelican.sh 
+if [ ! $# -eq 1 ]; then
+echo "./pelican.sh un seul argument"
+else 
+nb="$1"
+while [ $nb -gt 0 ]; do 
+./pelican.sh $nb
+nb=$($nb-1);
+done
+fi 
+Exercice 3: Le mot le plus long 
+Question 1 : 
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
