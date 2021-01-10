@@ -111,11 +111,37 @@ done
 fi 
 Exercice 3: Le mot le plus long 
 Question 1 : 
+Dans cet exercice on s’intéresse à la recherche du mot le plus long d’un texte. Pour simplifier l’écriture
+d’un tel mécanisme, on va commencer par développer un script longest_param.sh affiche le plus long de
+ses paramètres (le premier en cas d’égalité).
+#!/bin/bash
+max_size=0
+for param in "$@"; do #&@ contient la liste des parametres passee en arg
+ if [ ${#param} -gt $max_size ]; then # while the length of the string is getter than mxsize
+      max_size=${#param} #max size takes the value of the length of  the string 
+      longest_param="$param" #longest take that param 
+fi
+done
+if [ $max_size -gt 0 ]; then
+echo $longest_param
+fi
+Question 2-3:
+#./longest_word.sh
+#!bin/bash      
+while read ligne < $1; do 
+   ./longest_param  $ligne
+   done   
+Question 4-5:
+./longest_word_text.sh
+list_longest=""
+while read line; do
+list_longest="$list_longest $(./longest_param $line)"
+done < $1
+./longest_param $list_longest
 
 
-
-
-
+ 
+ 
 
 
 
